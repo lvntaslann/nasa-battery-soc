@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+torch
+numpy<2
+pandas
+scikit-learn
+tqdm
+scipy
+python-dotenv
+sqlalchemy
+pydantic
+psycopg2-binary
+python-multipart
