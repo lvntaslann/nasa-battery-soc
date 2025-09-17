@@ -1,0 +1,2 @@
+*.ipynb linguist-vendored linguist-generated
+notebook/*.ipynb linguist-vendored linguist-generated
