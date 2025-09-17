@@ -5,11 +5,11 @@ from torch.utils.data import DataLoader
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from db.db import create_tables
 
 from utils.data_utils import SoCDataset, make_sequences
 from utils.train import train_model
 from utils.evaluate import evaluate_model
-from api.predict import router as predict_router
 from api.upload import router as upload_router
 from services.model_service import get_model
 from config import (
@@ -54,7 +54,7 @@ if TRAIN_MODEL:
     print("Sonuçlar kaydedildi.")
 
 
-
+create_tables()
 app = FastAPI(title="SoC Prediction API")
 app.add_middleware(
     CORSMiddleware,
@@ -64,8 +64,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(predict_router)
 app.include_router(upload_router)
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
