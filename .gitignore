@@ -12,3 +12,9 @@ ui/yarn-debug.log*
 ui/yarn-error.log*
 ui/pnpm-debug.log*
 ui/lerna-debug.log*
+
+# python
+__pycache__/
+*.py[cod]
+*.pyo
+.ipynb_checkpoints/
