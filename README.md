@@ -68,31 +68,48 @@ nasa-battery-soc/
 ### Projeyi Çalıştırmak için
 ----------------------------------------
 
-###### Step 1: Repoyu clonelayın
+##### Step 1: Repoyu clonelayın
 
 ```bash
 git clone https://github.com/lvntaslann/nasa-battery-soc
 ```
 
-###### Step 2: Terminalde proje dosya yoluna girin
+##### Step 2: Terminalde proje dosya yoluna girin
 ```bash
 cd nasa-battery-soc
 ```
 Projeyi çalıştırmak için öncelikle terminalinizde ortam değişkenlerini ayarlayın, ardından Docker Compose kullanarak uygulamayı başlatın
 
-###### Step 3: PowerShell'de ortam değişkenlerini dilediğiniz gibi ayarlayın (bu komutları tek tek çalıştırın)
+##### Step 3: PowerShell'de ortam değişkenlerini dilediğiniz gibi ayarlayın (bu komutları tek tek çalıştırın)
 
+
+##### PostgreSQL girdileri
+###### Zorunlu olarak girilmesi gerekiyor
 ```powershell
-$env:POSTGRES_USER="benimuser"
-$env:POSTGRES_PASSWORD="benimsecret"
-$env:PGADMIN_DEFAULT_PASSWORD="admin123"
+$env:POSTGRES_USER="myuser"
+$env:POSTGRES_PASSWORD="mydbpassword"
+$env:PGADMIN_DEFAULT_PASSWORD="mypgadminpassword"
 ```
-###### Step 4: Uygulamayı Docker Compose ile başlatın
+
+##### Tekrar eğitim yapılacaksa parametre girdileri
+###### Yapılmayacaksa :  default olarak eğitilmiş LSTM modeli kullanılıyor
+Eğitilebilecek model seçenekleri
+MODEL_TYPE = ["ffn","lstm","bilstm","gru"]
+```powershell
+$env:MODEL_TYPE="ffn"
+$env:EPOCHS="10"
+$env:BATCH_SIZE="128"
+$env:LR="0.001"
+$env:TRAIN_MODEL="True"
+$env:SEQ_LEN="30"
+```
+
+##### Step 4: Uygulamayı Docker Compose ile başlatın
 ```bash
 docker-compose up --build
 ```
 
-###### Step 5: Web tarayıcısında aşağıdaki portlar üzerinden görüntüleyin
+##### Step 5: Web tarayıcısında aşağıdaki portlar üzerinden görüntüleyin
 ```
 backend    : localhost:8000
 react ui   : localhost:5173
@@ -100,7 +117,7 @@ postgresql : localhost:5432
 pgadmin    : localhost:8080
 ```
 
-###### Step 6: Servis oluşturarak veritabanı detaylarını görüntülemek için (belirlediğiniz parametreler ile giriş yapabilirsiniz)
+##### Step 6: Servis oluşturarak veritabanı detaylarını görüntülemek için (belirlediğiniz parametreler ile giriş yapabilirsiniz)
 
 | ![Image 1](/assets/pgadmin-image-1.png) | ![Image 2](/assets/pgadmin-image-2.png) |
 |----------------------------------------|----------------------------------------|
@@ -119,7 +136,7 @@ pgadmin    : localhost:8080
 
 |       Model       |        MSE        |        MAE        |       RMSE       |        R²        |   Training Time (s)   |
 |:-----------------:|:----------------:|:----------------:|:----------------:|:----------------:|:-------------------:|
-|       FFN         |     0.00047      |     0.00704      |     0.02177      |     0.90277      |      502.89106       |
-|      LSTM         |     0.00024      |     0.00351      |     0.01561      |      0.95        |      801.59717       |
-|     BiLSTM        |     0.00040      |     0.00488      |     0.02012      |     0.91693      |      970.40744       |
-|       GRU         |     0.00031      |     0.00438      |     0.01748      |     0.93732      |      677.63637       |
+|       FFN         |     0.00047      |     0.00704      |     0.02177      |     0.9027      |      502.89106       |
+|      LSTM         |     0.00024      |     0.00351      |     0.01561      |      0.9500        |      801.59717       |
+|     BiLSTM        |     0.00040      |     0.00488      |     0.02012      |     0.9169      |      970.40744       |
+|       GRU         |     0.00031      |     0.00438      |     0.01748      |     0.9373      |      677.63637       |
