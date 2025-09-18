@@ -39,11 +39,11 @@ services:
       POSTGRES_PORT: 5432
 
       MODEL_TYPE: ${MODEL_TYPE}
-      EPOCHS: ${EPOCHS}
-      BATCH_SIZE: ${BATCH_SIZE}
-      LR: ${LR}
-      TRAIN_MODEL: ${TRAIN_MODEL}
-      SEQ_LEN: ${SEQ_LEN}
+      EPOCHS: ${EPOCHS:-10}
+      BATCH_SIZE: ${BATCH_SIZE:-128}
+      LR: ${LR:-0.001}
+      TRAIN_MODEL: ${TRAIN_MODEL:-False}
+      SEQ_LEN: ${SEQ_LEN:-30}
       MODEL_PATH: ${MODEL_PATH}
     ports:
       - "8000:8000"
