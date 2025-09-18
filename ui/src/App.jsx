@@ -130,7 +130,7 @@ function App() {
               </h3>
               <p className="text-gray-600">
                 Modelimiz, SOC (State of Charge) tahmini için sensör verilerini
-                kullanmaktadır. Excel dosyanızda uygun sütun isimleri
+                kullanmaktadır. JSON dosyanızda uygun sütun isimleri
                 bulunmalıdır.
               </p>
             </div>
