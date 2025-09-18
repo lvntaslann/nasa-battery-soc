@@ -34,9 +34,17 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB:-mydatabase}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: db
       POSTGRES_PORT: 5432
+
+      MODEL_TYPE: ${MODEL_TYPE}
+      EPOCHS: ${EPOCHS}
+      BATCH_SIZE: ${BATCH_SIZE}
+      LR: ${LR}
+      TRAIN_MODEL: ${TRAIN_MODEL}
+      SEQ_LEN: ${SEQ_LEN}
+      MODEL_PATH: ${MODEL_PATH}
     ports:
       - "8000:8000"
 

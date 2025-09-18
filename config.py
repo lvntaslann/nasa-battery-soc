@@ -1,9 +1,12 @@
-MODEL_TYPE = "ffn"
-EPOCHS = 10
-BATCH_SIZE = 128
-LR = 0.001
-TRAIN_MODEL = False
-SEQ_LEN = 30
+import os
+
+MODEL_TYPE = os.getenv("MODEL_TYPE", "lstm")
+EPOCHS = int(os.getenv("EPOCHS", 10))
+BATCH_SIZE = int(os.getenv("BATCH_SIZE", 128))
+LR = float(os.getenv("LR", 0.001))
+TRAIN_MODEL = os.getenv("TRAIN_MODEL", "False").lower() in ("true", "1", "yes")
+SEQ_LEN = int(os.getenv("SEQ_LEN", 30))
+
 FEATURE_COLS = [
     'Voltage_measured',
     'Current_measured',
@@ -13,4 +16,4 @@ FEATURE_COLS = [
 ]
 TARGET_COL = 'SoC'
 
-MODEL_PATH = f"./result/model/{MODEL_TYPE}_model.pth"
+MODEL_PATH = os.getenv("MODEL_PATH", f"./result/model/{MODEL_TYPE}_model.pth")
