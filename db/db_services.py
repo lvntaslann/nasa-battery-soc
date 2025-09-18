@@ -15,3 +15,9 @@ def save_data_entry(db: Session, data: dict, filename: str, soc_predicted: float
     db.commit()
     db.refresh(entry)
     return entry
+
+def get_data_entry(db: Session, entry_id: int):
+    return db.query(DataEntry).filter(DataEntry.id == entry_id).first()
+
+def get_all_data_entries(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(DataEntry).offset(skip).limit(limit).all()

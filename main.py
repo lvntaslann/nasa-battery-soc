@@ -11,6 +11,7 @@ from utils.data_utils import SoCDataset, make_sequences
 from utils.train import train_model
 from utils.evaluate import evaluate_model
 from api.upload import router as upload_router
+from api.get_data import router as get_data_router
 from services.model_service import get_model
 from config import (
     MODEL_TYPE, TRAIN_MODEL, EPOCHS, BATCH_SIZE, LR, SEQ_LEN, FEATURE_COLS, TARGET_COL, MODEL_PATH
@@ -65,7 +66,7 @@ app.add_middleware(
 )
 
 app.include_router(upload_router)
-
+app.include_router(get_data_router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

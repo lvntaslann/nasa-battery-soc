@@ -3,7 +3,7 @@ import json
 from sqlalchemy.orm import Session
 from services.model_service import predict_sequence
 from db.db import get_db
-from db.save_db import save_data_entry
+from db.db_services import save_data_entry
 
 router = APIRouter()
 

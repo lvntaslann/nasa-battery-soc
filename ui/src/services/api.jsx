@@ -1,43 +1,25 @@
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = "http://localhost:8000";
 
-// JSON dosya upload
 export const uploadBatteryData = async (file) => {
   const formData = new FormData();
-  formData.append('file', file); // JSON dosyası
+  formData.append("file", file);
 
-  try {
-    const response = await fetch(`${BASE_URL}/upload`, {
-      method: 'POST',
-      body: formData,
-    });
+  const response = await fetch(`${BASE_URL}/upload`, {
+    method: "POST",
+    body: formData,
+  });
 
-    if (!response.ok) {
-      throw new Error('Dosya yükleme sırasında hata oluştu.');
-    }
-
-    return await response.json(); // Backend JSON dönecek
-  } catch (error) {
-    console.error(error);
-    throw error;
+  if (!response.ok) {
+    throw new Error("Dosya yüklenemedi");
   }
+
+  return await response.json();
 };
 
-// Eğer liste verisiyle direkt predict çağırmak istersen
-export const getPrediction = async (data) => {
-  try {
-    const response = await fetch(`${BASE_URL}/predict`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error('Tahmin alınamadı.');
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error(error);
-    throw error;
+export const getBatteryData = async () => {
+  const response = await fetch(`${BASE_URL}/data`);
+  if (!response.ok) {
+    throw new Error("Veriler alınamadı");
   }
+  return await response.json();
 };
