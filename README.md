@@ -68,33 +68,46 @@ nasa-battery-soc/
 ### Projeyi Çalıştırmak için
 ----------------------------------------
 
-##### Step 1: Repoyu clonelayın
+#### Step 1: Repoyu clonelayın
 
 ```bash
 git clone https://github.com/lvntaslann/nasa-battery-soc
 ```
 
-##### Step 2: Terminalde proje dosya yoluna girin
+#### Step 2: Terminalde proje dosya yoluna girin
 ```bash
 cd nasa-battery-soc
 ```
 Projeyi çalıştırmak için öncelikle terminalinizde ortam değişkenlerini ayarlayın, ardından Docker Compose kullanarak uygulamayı başlatın
 
-##### Step 3: PowerShell'de ortam değişkenlerini dilediğiniz gibi ayarlayın (bu komutları tek tek çalıştırın)
+Windowsta docker desktop, Linuxta docker kurulu değilse yüklemeyi unutmayın
+#### Step 3: Windows PowerShell'de veya Linux Terminalde ortam değişkenlerini dilediğiniz gibi ayarlayın (bu komutları tek tek çalıştırın)
 
 
-##### PostgreSQL girdileri
-###### Zorunlu olarak girilmesi gerekiyor
+#### PostgreSQL girdileri
+##### Zorunlu olarak girilmesi gerekiyor
+###### pgadminde default email admin@admin.com
+Windows Powershell
 ```powershell
+$env:POSTGRES_DB="mydatabase"
 $env:POSTGRES_USER="myuser"
 $env:POSTGRES_PASSWORD="mydbpassword"
 $env:PGADMIN_DEFAULT_PASSWORD="mypgadminpassword"
 ```
+Linux terminal
+```bash
+export POSTGRES_DB="mydatabase"
+export POSTGRES_USER="myuser"
+export POSTGRES_PASSWORD="mydbpassword"
+export PGADMIN_DEFAULT_PASSWORD="mypgadminpassword"
+```
 
-##### Tekrar eğitim yapılacaksa parametre girdileri
+#### Tekrar eğitim yapılacaksa parametre girdileri
 ###### Yapılmayacaksa :  default olarak eğitilmiş LSTM modeli kullanılıyor
 Eğitilebilecek model seçenekleri
 MODEL_TYPE = ["ffn","lstm","bilstm","gru"]
+
+Windows Powershell
 ```powershell
 $env:MODEL_TYPE="ffn"
 $env:EPOCHS="10"
@@ -103,21 +116,29 @@ $env:LR="0.001"
 $env:TRAIN_MODEL="True"
 $env:SEQ_LEN="30"
 ```
+Linux terminal
+```bash
+export MODEL_TYPE="ffn"
+export EPOCHS="10"
+export BATCH_SIZE="128"
+export LR="0.001"
+export TRAIN_MODEL="True"
+export SEQ_LEN="30"
+```
 
-##### Step 4: Uygulamayı Docker Compose ile başlatın
+#### Step 4: Uygulamayı Docker Compose ile başlatın
 ```bash
 docker-compose up --build
 ```
 
-##### Step 5: Web tarayıcısında aşağıdaki portlar üzerinden görüntüleyin
+#### Step 5: Web tarayıcısında aşağıdaki portlar üzerinden görüntüleyin
 ```
-backend    : localhost:8000
+backend    : localhost:8000/docs
 react ui   : localhost:5173
-postgresql : localhost:5432
 pgadmin    : localhost:8080
 ```
 
-##### Step 6: Servis oluşturarak veritabanı detaylarını görüntülemek için (belirlediğiniz parametreler ile giriş yapabilirsiniz)
+#### Step 6: Servis oluşturarak veritabanı detaylarını görüntülemek için (belirlediğiniz parametreler ile giriş yapabilirsiniz)
 
 | ![Image 1](/assets/pgadmin-image-1.png) | ![Image 2](/assets/pgadmin-image-2.png) |
 |----------------------------------------|----------------------------------------|
