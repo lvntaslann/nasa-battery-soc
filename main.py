@@ -6,24 +6,49 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from db.db import create_tables
+import time
+from sqlalchemy.exc import OperationalError
 
 from utils.data_utils import SoCDataset, make_sequences
 from utils.train import train_model
 from utils.evaluate import evaluate_model
 from api.upload import router as upload_router
 from api.get_data import router as get_data_router
+from api.mqtt_predict import router as mqtt_router
+
 from services.model_service import get_model
 from config import (
     MODEL_TYPE, TRAIN_MODEL, EPOCHS, BATCH_SIZE, LR, SEQ_LEN, FEATURE_COLS, TARGET_COL, MODEL_PATH
 )
+
+
+from utils.data_processing_for_analysis import generate_metadata
+from utils.data_processing_for_train import create_train_test_csv
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = None
 
 if TRAIN_MODEL:
     print("[INFO] Eğitim başlatılıyor...")
-    train_df = pd.read_csv("./data/model_data/train_df.csv")
-    test_df  = pd.read_csv("./data/model_data/test_df.csv")
+
+    metadata_path = "/app/data/metadata.csv"
+    cleaned_dir   = "/app/data/cleaned_dataset"
+
+    if not os.path.exists(metadata_path):
+        print("[INFO] Metadata CSV bulunamadı, oluşturuluyor...")
+        generate_metadata(data_dir="./BatteryAgingARC-FY08Q4", output_dir=cleaned_dir)
+
+    train_path = "/app/data/model_data/train_df.csv"
+    test_path  = "/app/data/model_data/test_df.csv"
+
+    if not os.path.exists(train_path) or not os.path.exists(test_path):
+        print("[INFO] Train/test CSV’leri bulunamadı, oluşturuluyor...")
+        create_train_test_csv(meta_path=metadata_path,
+                              clean_dir=cleaned_dir,
+                              save_dir='./data/model_data/')
+
+    train_df = pd.read_csv(train_path)
+    test_df  = pd.read_csv(test_path)
 
     X_train, y_train = make_sequences(train_df, seq_len=SEQ_LEN, feature_cols=FEATURE_COLS, target_col=TARGET_COL)
     X_test, y_test   = make_sequences(test_df, seq_len=SEQ_LEN, feature_cols=FEATURE_COLS, target_col=TARGET_COL)
@@ -54,8 +79,16 @@ if TRAIN_MODEL:
                             save_json="./result/scores.json", model_name=MODEL_TYPE)
     print("Sonuçlar kaydedildi.")
 
+max_retries = 10
+for i in range(max_retries):
+    try:
+        create_tables()
+        break
+    except OperationalError:
+        print(f"[INFO] DB hazır değil, 2 saniye bekleniyor... ({i+1}/{max_retries})")
+        time.sleep(2)
 
-create_tables()
+
 app = FastAPI(title="SoC Prediction API")
 app.add_middleware(
     CORSMiddleware,
@@ -67,6 +100,7 @@ app.add_middleware(
 
 app.include_router(upload_router)
 app.include_router(get_data_router)
+app.include_router(mqtt_router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)

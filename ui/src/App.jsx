@@ -8,23 +8,22 @@ import {
   TrendingUp,
 } from "lucide-react";
 import FileUpload from "./components/FileUpload";
-import SOCGauge from "./components/SOCGauge";
-import MetricCard from "./components/MetricCard";
 import ModelParameters from "./components/ModelParameters";
 import DataVisualization from "./components/DataVisualization";
+import RealtimeBattery from "./components/RealtimeBattery";
 import "./App.css";
 import { uploadBatteryData, getBatteryData } from "./services/api";
 
 function App() {
-  const [data, setData] = useState([]); // tüm veriler
-  const [groupedData, setGroupedData] = useState([]); // filename bazlı gruplama
+  const [data, setData] = useState([]);
+  const [groupedData, setGroupedData] = useState([]);
   const [currentValues, setCurrentValues] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showUploadAlert, setShowUploadAlert] = useState(false);
   const [selectedAnalysisIndex, setSelectedAnalysisIndex] = useState(null);
 
-  // filename bazlı gruplama
+
   const groupByFilename = (entries) => {
     const map = {};
     entries.forEach((e) => {
@@ -140,66 +139,9 @@ function App() {
           </div>
         </div>
 
-        {/* Current Status */}
-        {currentValues && (
-          <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-            <div className="flex items-center mb-6">
-              <TrendingUp className="w-6 h-6 text-green-600 mr-3" />
-              <h2 className="text-2xl font-bold text-gray-800">
-                Anlık Batarya Durumu ve Tahmin
-              </h2>
-            </div>
-            <div className="grid lg:grid-cols-2 gap-8 items-center">
-              <div className="flex justify-center">
-                <SOCGauge value={(prediction || 0) * 100} />
-              </div>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <MetricCard
-                    icon={<Zap className="w-5 h-5" />}
-                    title="Voltaj"
-                    value={`${currentValues.voltage_measured.toFixed(2)} V`}
-                    color="text-yellow-600"
-                    bgColor="bg-yellow-50"
-                  />
-                  <MetricCard
-                    icon={<TrendingUp className="w-5 h-5" />}
-                    title="Akım"
-                    value={`${currentValues.current_measured.toFixed(2)} A`}
-                    color="text-purple-600"
-                    bgColor="bg-purple-50"
-                  />
-                  <MetricCard
-                    icon={<Thermometer className="w-5 h-5" />}
-                    title="Sıcaklık"
-                    value={`${currentValues.temperature_measured.toFixed(
-                      1
-                    )} °C`}
-                    color="text-orange-600"
-                    bgColor="bg-orange-50"
-                  />
-                  <MetricCard
-                    icon={<Battery className="w-5 h-5" />}
-                    title="Şarj Durumu"
-                    value={
-                      currentValues.is_charging
-                        ? "Şarj Ediliyor"
-                        : "Şarj Edilmiyor"
-                    }
-                    color={
-                      currentValues.is_charging
-                        ? "text-green-600"
-                        : "text-red-600"
-                    }
-                    bgColor={
-                      currentValues.is_charging ? "bg-green-50" : "bg-red-50"
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+
+        {/*  MQTT data */}
+        <RealtimeBattery />
 
         {/* Data Visualization */}
         {selectedAnalysisIndex !== null && (

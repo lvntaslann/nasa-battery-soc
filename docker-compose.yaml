@@ -24,6 +24,17 @@ services:
     depends_on:
       - db
 
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config:rw
+      - ./mosquitto/data:/mosquitto/data:rw
+      - ./mosquitto/log:/mosquitto/log:rw
+
   backend:
     build:
       context: .
@@ -31,6 +42,7 @@ services:
     container_name: backend
     depends_on:
       - db
+      - mqtt
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -60,3 +72,5 @@ services:
 
 volumes:
   db_data:
+  mosquitto_data:
+  mosquitto_config:
