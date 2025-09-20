@@ -1,6 +1,8 @@
 ### Projenin amacı
 ----------------------------------------
- Bu projenin amacı, NASA batarya verisi üzerinde SoC (State of Charge) tahminleri yapmaktır. Proje kapsamında veriler tamamen temizlenmiş, özellik çıkarımı ve keşifsel veri analizi (EDA) gerçekleştirilmiş, farklı yapay sinir ağı modelleri (FFN, LSTM, BiLSTM, GRU) ile model eğitimi ve değerlendirme yapılmıştır. Eğitilen modeller kaydedilmiş, yeniden kullanılabilir hâle getirilmiş ve FastAPI kullanılarak Docker tabanlı bir servis oluşturulmuştur. Ayrıca React tabanlı bir web arayüz ile tahmin sonuçları görselleştirilmiş ve kullanıcı dostu bir demo hazırlanmıştır. Böylece veri hazırlamadan model dağıtımına kadar uçtan uca bir pipeline oluşturularak projenin çoğaltılabilir ve tekrar üretilebilir olması sağlanmıştır.
+Bu projenin amacı, NASA batarya verisi üzerinde geçmiş verilerden özellik çıkarımı yaparak SoC (State of Charge) ile gelecekteki SoC tahminlerini gerçekleştirmektir. Proje kapsamında veriler tamamen temizlenmiş, özellik çıkarımı ve keşifsel veri analizi (EDA) gerçekleştirilmiş, farklı yapay sinir ağı modelleri (FFN, LSTM, BiLSTM, GRU) ile model eğitimi ve değerlendirme yapılmıştır. Eğitilen modeller kaydedilmiş, yeniden kullanılabilir hâle getirilmiş ve FastAPI kullanılarak Docker tabanlı bir servis oluşturulmuştur.
+
+Sistem, verilerin güvenli şekilde saklanması için PostgreSQL veritabanı ile entegre edilmiş, anlık veri iletimi ve cihaz mesajlaşmasını test verisi ile simüle edebilmek için MQTT broker kullanılmıştır. Ayrıca React tabanlı bir web arayüz ile tahmin sonuçları görselleştirilmiş ve kullanıcı dostu bir demo hazırlanmıştır. Böylece veri hazırlamadan model dağıtımına kadar uçtan uca bir pipeline oluşturularak, projenin çoğaltılabilir ve tekrar üretilebilir olması sağlanmıştır.
 
 
 ### Demo Video
@@ -160,13 +162,12 @@ pgadmin    : localhost:8080
 <img src="/assets/ui-image-4.png" alt="Uygulama Tasarımı" width="850" style="display: block; margin: auto;" />
 
 
-### Model sonuçları
-----------------------------------------
+### Model Sonuçları
 
-|       Model       |        MSE        |        MAE        |       RMSE       |        R²        |   Training Time (s)   |
-|:-----------------:|:----------------:|:----------------:|:----------------:|:----------------:|:-------------------:|
-|       FFN         |     0.0001       |     0.0024       |     0.0095       |     0.9816       |      500.8786       |
-|      LSTM         |     0.0002       |     0.0006       |     0.0021       |     0.9991       |      782.1539       |
-|     BiLSTM        |     0.0001       |     0.0005       |     0.0021       |     0.9991       |      956.1968       |
-|       GRU         |     0.0003       |     0.0002       |     0.0010       |     0.9998       |      687.0017       |
+| Model   | MSE       | MAE       | RMSE      | R²       | Training Time (s) |
+|:-------:|:---------:|:---------:|:---------:|:--------:|:----------------:|
+| FFN     | 9.00e-05  | 2.36e-03  | 9.48e-03  | 0.9816   | 500.8786         |
+| LSTM    | 2.30e-04  | 5.90e-04  | 2.08e-03  | 0.9991   | 782.1539         |
+| BiLSTM  | 1.20e-04  | 5.10e-04  | 2.14e-03  | 0.9991   | 956.1968         |
+| GRU     | 2.80e-04  | 2.10e-04  | 9.80e-04  | 0.9998   | 687.0017         |
 
