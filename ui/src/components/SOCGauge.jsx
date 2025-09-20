@@ -63,8 +63,8 @@ const SOCGauge = ({ value }) => {
       
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <div className={`text-5xl font-bold ${getColor(displayValue)} mb-2`}>
-            {displayValue.toFixed(1)}%
+          <div className={`text-3xl font-bold ${getColor(displayValue)} mb-2`}>
+            {displayValue.toFixed(5)}%
           </div>
           <div className="text-gray-600 text-lg font-medium">
             SOC

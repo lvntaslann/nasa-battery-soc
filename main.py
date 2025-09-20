@@ -18,12 +18,13 @@ from api.mqtt_predict import router as mqtt_router
 
 from services.model_service import get_model
 from config import (
-    MODEL_TYPE, TRAIN_MODEL, EPOCHS, BATCH_SIZE, LR, SEQ_LEN, FEATURE_COLS, TARGET_COL, MODEL_PATH
+    MODEL_TYPE, TRAIN_MODEL, EPOCHS, BATCH_SIZE, LR, SEQ_LEN,
+    FEATURE_COLS, TARGET_COL, MODEL_PATH
 )
 
 
-from utils.data_processing_for_analysis import generate_metadata
-from utils.data_processing_for_train import create_train_test_csv
+from scripts.prepare_metadata import BatteryDataPreparer
+from scripts.prepare_model_data import ModelDataPreparer
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = None
@@ -36,22 +37,36 @@ if TRAIN_MODEL:
 
     if not os.path.exists(metadata_path):
         print("[INFO] Metadata CSV bulunamadı, oluşturuluyor...")
-        generate_metadata(data_dir="./BatteryAgingARC-FY08Q4", output_dir=cleaned_dir)
+        preparer = BatteryDataPreparer(
+            data_dir="./BatteryAgingARC-FY08Q4",
+            cleaned_dir=cleaned_dir,
+            metadata_path=metadata_path
+        )
+        preparer.process_all()
 
     train_path = "/app/data/model_data/train_df.csv"
     test_path  = "/app/data/model_data/test_df.csv"
 
     if not os.path.exists(train_path) or not os.path.exists(test_path):
         print("[INFO] Train/test CSV’leri bulunamadı, oluşturuluyor...")
-        create_train_test_csv(meta_path=metadata_path,
-                              clean_dir=cleaned_dir,
-                              save_dir='./data/model_data/')
+        model_preparer = ModelDataPreparer(
+            data_dir="/app/data",
+            cleaned_dir=cleaned_dir,
+            model_data_dir="/app/data/model_data",
+            meta_path=metadata_path
+        )
+        model_preparer.prepare()
 
+  
     train_df = pd.read_csv(train_path)
     test_df  = pd.read_csv(test_path)
 
-    X_train, y_train = make_sequences(train_df, seq_len=SEQ_LEN, feature_cols=FEATURE_COLS, target_col=TARGET_COL)
-    X_test, y_test   = make_sequences(test_df, seq_len=SEQ_LEN, feature_cols=FEATURE_COLS, target_col=TARGET_COL)
+    X_train, y_train = make_sequences(
+        train_df, seq_len=SEQ_LEN, feature_cols=FEATURE_COLS, target_col=TARGET_COL
+    )
+    X_test, y_test   = make_sequences(
+        test_df, seq_len=SEQ_LEN, feature_cols=FEATURE_COLS, target_col=TARGET_COL
+    )
 
     train_dataset = SoCDataset(X_train, y_train)
     test_dataset  = SoCDataset(X_test, y_test)
@@ -65,19 +80,24 @@ if TRAIN_MODEL:
 
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
     loss_fn = torch.nn.MSELoss()
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", patience=3, factor=0.5)
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode="min", patience=3, factor=0.5
+    )
 
+  
     model = train_model(
         model, train_loader, test_loader, optimizer, loss_fn, scheduler,
         num_epochs=EPOCHS, device=device, fig_path=f"./result/figures/{MODEL_TYPE}_loss.png"
     )
 
     torch.save(model.state_dict(), MODEL_PATH)
-    print(f"Model kaydedildi: {MODEL_PATH}")
+    print(f"[INFO] Model kaydedildi: {MODEL_PATH}")
 
-    scores = evaluate_model(model, test_loader, device,
-                            save_json="./result/scores.json", model_name=MODEL_TYPE)
-    print("Sonuçlar kaydedildi.")
+    scores = evaluate_model(
+        model, test_loader, device,
+        save_json="./result/scores.json", model_name=MODEL_TYPE
+    )
+    print("[INFO] Sonuçlar kaydedildi.")
 
 max_retries = 10
 for i in range(max_retries):
@@ -87,7 +107,6 @@ for i in range(max_retries):
     except OperationalError:
         print(f"[INFO] DB hazır değil, 2 saniye bekleniyor... ({i+1}/{max_retries})")
         time.sleep(2)
-
 
 app = FastAPI(title="SoC Prediction API")
 app.add_middleware(

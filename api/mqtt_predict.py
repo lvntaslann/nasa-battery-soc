@@ -10,7 +10,7 @@ router = APIRouter()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEST_CSV_PATH = os.path.join(BASE_DIR, "data", "model_data", "test_df.csv")
-FEATURE_COLS = ['Voltage_measured', 'Current_measured', 'Temperature_measured', 'delta_t', 'is_charging']
+FEATURE_COLS = ['SoC','Voltage_measured', 'Current_measured', 'Temperature_measured', 'delta_t', 'is_charging']
 
 if os.path.exists(TEST_CSV_PATH):
     test_df = pd.read_csv(TEST_CSV_PATH)

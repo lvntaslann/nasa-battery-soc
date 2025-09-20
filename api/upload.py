@@ -21,6 +21,7 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
 
     print("[INFO] Preparing data for prediction...")
     seqs = [[
+        d.get("SoC", 0),
         d.get("Voltage_measured", 0),
         d.get("Current_measured", 0),
         d.get("Temperature_measured", 0),
@@ -41,7 +42,8 @@ async def upload_file(file: UploadFile = File(...), db: Session = Depends(get_db
     print(f"[INFO] Predictions: {cleaned_predictions}")
 
     for i, d in enumerate(data_list):
-        save_data_entry(db, d, filename, cleaned_predictions[i])
+        data_to_save = {k: v for k, v in d.items() if k != "SoC"}
+        save_data_entry(db, data_to_save, filename, cleaned_predictions[i])
 
     avg_SOC = sum(d.get("SoC", 0) for d in data_list) / len(data_list) if data_list else 0
     avg_voltage = sum(d.get("Voltage_measured", 0) for d in data_list) / len(data_list) if data_list else 0

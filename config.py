@@ -8,6 +8,7 @@ TRAIN_MODEL = os.getenv("TRAIN_MODEL", "False").lower() in ("true", "1", "yes")
 SEQ_LEN = int(os.getenv("SEQ_LEN", 30))
 
 FEATURE_COLS = [
+    'SoC',
     'Voltage_measured',
     'Current_measured',
     'Temperature_measured',

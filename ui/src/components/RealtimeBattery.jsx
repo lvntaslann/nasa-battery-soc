@@ -42,28 +42,28 @@ const RealtimeBattery = () => {
       </div>
       <div className="grid lg:grid-cols-2 gap-8 items-center">
         <div className="flex justify-center">
-          <SOCGauge value={(prediction || 0) * 100} />
+          <SOCGauge value={parseFloat(((prediction || 0) * 100).toFixed(5))} />
         </div>
         <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <MetricCard
               icon={<Zap className="w-5 h-5" />}
               title="Voltaj"
-              value={`${currentData.Voltage_measured?.toFixed(2) ?? 0} V`}
+              value={`${currentData.Voltage_measured?.toFixed(4) ?? 0} V`}
               color="text-yellow-600"
               bgColor="bg-yellow-50"
             />
             <MetricCard
               icon={<TrendingUp className="w-5 h-5" />}
               title="Akım"
-              value={`${currentData.Current_measured?.toFixed(2) ?? 0} A`}
+              value={`${currentData.Current_measured?.toFixed(4) ?? 0} A`}
               color="text-purple-600"
               bgColor="bg-purple-50"
             />
             <MetricCard
               icon={<Thermometer className="w-5 h-5" />}
               title="Sıcaklık"
-              value={`${currentData.Temperature_measured?.toFixed(1) ?? 0} °C`}
+              value={`${currentData.Temperature_measured?.toFixed(4) ?? 0} °C`}
               color="text-orange-600"
               bgColor="bg-orange-50"
             />

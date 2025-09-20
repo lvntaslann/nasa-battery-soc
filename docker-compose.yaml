@@ -59,6 +59,8 @@ services:
       MODEL_PATH: ${MODEL_PATH:-./result/model/lstm_model.pth}
     ports:
       - "8000:8000"
+    volumes:
+      - ./data:/app/data
 
   ui:
     build:

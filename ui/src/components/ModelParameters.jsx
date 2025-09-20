@@ -4,6 +4,13 @@ import { Zap, TrendingUp, Thermometer, Clock, Battery, Target } from 'lucide-rea
 const ModelParameters = () => {
   const inputFeatures = [
     {
+      name: 'SoC (önceki)',
+      description: 'Bir önceki zaman adımındaki şarj seviyesi (%)',
+      icon: <Target className="w-5 h-5" />,
+      color: 'text-red-600',
+      bgColor: 'bg-red-50'
+    },
+    {
       name: 'Voltage_measured',
       description: 'Ölçülen voltaj değeri (V)',
       icon: <Zap className="w-5 h-5" />,
@@ -41,8 +48,8 @@ const ModelParameters = () => {
   ];
 
   const targetColumn = {
-    name: 'SoC',
-    description: 'State of Charge (Şarj Seviyesi) %',
+    name: 'SoC (sonraki)',
+    description: 'Tahmin edilmek istenen şarj seviyesi (%)',
     icon: <Target className="w-5 h-5" />,
     color: 'text-red-600',
     bgColor: 'bg-red-50'
@@ -60,7 +67,7 @@ const ModelParameters = () => {
           {inputFeatures.map((feature, index) => (
             <div 
               key={index}
-              className={`${feature.bgColor} rounded-lg p-2 border-l-3 border-l-blue-400 hover:shadow-sm transition-shadow duration-200`}
+              className={`${feature.bgColor} rounded-lg p-2 border-l-4 border-l-blue-400 hover:shadow-sm transition-shadow duration-200`}
             >
               <div className="flex items-center space-x-2">
                 <div className={`${feature.color} ${feature.bgColor} p-1 rounded`}>
@@ -82,7 +89,7 @@ const ModelParameters = () => {
           <Target className="w-4 h-4 text-red-600 mr-2" />
           Hedef Parametre (TARGET_COL)
         </h3>
-        <div className={`${targetColumn.bgColor} rounded-lg p-2 border-l-3 border-l-red-400 hover:shadow-sm transition-shadow duration-200`}>
+        <div className={`${targetColumn.bgColor} rounded-lg p-2 border-l-4 border-l-red-400 hover:shadow-sm transition-shadow duration-200`}>
           <div className="flex items-center space-x-2">
             <div className={`${targetColumn.color} ${targetColumn.bgColor} p-1 rounded`}>
               {targetColumn.icon}
@@ -97,7 +104,7 @@ const ModelParameters = () => {
         {/* Additional info for target */}
         <div className="mt-3 p-2 bg-gray-50 rounded-lg">
           <p className="text-xs text-gray-600">
-            Bu parametre modelin tahmin edeceği değerdir. Mevcut verilerden öğrenilen kalıplar kullanılarak gelecekteki SOC değeri hesaplanır.
+            Model, geçmiş SoC ve diğer parametrelerden öğrenerek <b>bir sonraki zaman adımındaki SoC değerini</b> tahmin eder.
           </p>
         </div>
       </div>
