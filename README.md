@@ -3,18 +3,26 @@
  Bu projenin amacı, NASA batarya verisi üzerinde SoC (State of Charge) tahminleri yapmaktır. Proje kapsamında veriler tamamen temizlenmiş, özellik çıkarımı ve keşifsel veri analizi (EDA) gerçekleştirilmiş, farklı yapay sinir ağı modelleri (FFN, LSTM, BiLSTM, GRU) ile model eğitimi ve değerlendirme yapılmıştır. Eğitilen modeller kaydedilmiş, yeniden kullanılabilir hâle getirilmiş ve FastAPI kullanılarak Docker tabanlı bir servis oluşturulmuştur. Ayrıca React tabanlı bir web arayüz ile tahmin sonuçları görselleştirilmiş ve kullanıcı dostu bir demo hazırlanmıştır. Böylece veri hazırlamadan model dağıtımına kadar uçtan uca bir pipeline oluşturularak projenin çoğaltılabilir ve tekrar üretilebilir olması sağlanmıştır.
 
 
-### Dosya yapısı
+### Demo Video
 ----------------------------------------
+#### Drive linki: [Demo Video](https://drive.google.com/file/d/1Srd0MA-K9hY3d4nE69sceNtp2YEYU8hC/view?usp=sharing)
+
+
+
+### Dosya Yapısı
+----------------------------------------
+
 ```
 nasa-battery-soc/
 │
 ├── api/
-│   ├── get_data.py          # postgresql'den veri getirme işlemi
-│   └── upload.py            # ui'da json dosyası yükleme işlemi
+│   ├── get_data.py          # PostgreSQL'den veri getirme işlemi
+│   ├── upload.py            # UI'da JSON dosyası yükleme işlemi
+│   └── mqtt_predict.py      # MQTT ile test verisi gönderme ve anlık tahmin alma
 │
 ├── data/
 │   ├── cleaned_dataset/
-│   ├── model_data/          # train_df.csv test_df.csv
+│   ├── model_data/          # train_df.csv ve test_df.csv
 │   ├── metadata.csv         # cleaned_dataset detayları
 │   └── combined_df.csv
 │
@@ -40,7 +48,7 @@ nasa-battery-soc/
 │   └── preparing_data_for_training.ipynb
 │
 ├── result/
-│   ├── model/                # .pth model dosyaları
+│   ├── model/               # .pth model dosyaları
 │   └── scores.json
 │
 ├── scripts/
@@ -157,7 +165,8 @@ pgadmin    : localhost:8080
 
 |       Model       |        MSE        |        MAE        |       RMSE       |        R²        |   Training Time (s)   |
 |:-----------------:|:----------------:|:----------------:|:----------------:|:----------------:|:-------------------:|
-|       FFN         |     0.00047      |     0.00704      |     0.02177      |     0.9027      |      502.89106       |
-|      LSTM         |     0.00024      |     0.00351      |     0.01561      |      0.9500        |      801.59717       |
-|     BiLSTM        |     0.00040      |     0.00488      |     0.02012      |     0.9169      |      970.40744       |
-|       GRU         |     0.00031      |     0.00438      |     0.01748      |     0.9373      |      677.63637       |
+|       FFN         |     0.0001       |     0.0024       |     0.0095       |     0.9816       |      500.8786       |
+|      LSTM         |     0.0002       |     0.0006       |     0.0021       |     0.9991       |      782.1539       |
+|     BiLSTM        |     0.0001       |     0.0005       |     0.0021       |     0.9991       |      956.1968       |
+|       GRU         |     0.0003       |     0.0002       |     0.0010       |     0.9998       |      687.0017       |
+
